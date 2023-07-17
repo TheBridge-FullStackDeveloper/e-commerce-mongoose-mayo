@@ -9,5 +9,7 @@ app.use(express.json())//parsea el body, sino es undefined (middleware)
 
 app.use("/products",require("./routes/products"))
 app.use("/users",require("./routes/users"))
+app.use("/orders",require("./routes/orders"))
+
 
 app.listen(PORT,()=> console.log(`Servidor levantado en el puerto ${PORT}`))
