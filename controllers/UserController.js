@@ -3,14 +3,14 @@ const jwt = require("jsonwebtoken");
 const { jwt_secret } = require("../config/keys");
 
 const UserController = {
-  async register(req, res) {
+  async register(req, res, next) {
     try {
       // req.body.role ="user"
       const user = await User.create({ ...req.body, role: "user" });
       res.status(201).send({ message: "Usuario registrado con exito", user });
     } catch (error) {
       console.error(error);
-      res.status(500).send(error);
+      next(error);
     }
   },
   async login(req, res) {
@@ -40,6 +40,26 @@ const UserController = {
       res.status(500).send({
         message: "Hubo un problema al intentar desconectar al usuario",
       });
+    }
+  },
+  async getInfo(req, res) {
+    try {
+      const user = await User.findById(req.user._id)
+        .populate({
+          path: "orderIds",
+          populate: {
+            path: "productIds",
+          },
+        })
+        // .populate({
+        //   path: "wishList",
+        // })
+        .populate("wishList");
+
+
+      res.send(user);
+    } catch (error) {
+      console.error(error);
     }
   },
 };

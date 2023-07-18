@@ -1,13 +1,19 @@
 const Order = require("../models/Order.js");
+const User = require("../models/User.js");
 
 const OrderController = {
   async create(req, res) {
     try {
+      //creamos el pedido
       const order = await Order.create({
         ...req.body,
         status: "pending",
         deliveryDate: new Date().setDate(new Date().getDate() + 2),
         userId: req.user._id,
+      });
+      //actualizamos el usuario para que tenga el id del pedido que acaba de crear
+      await User.findByIdAndUpdate(req.user._id, {
+        $push: { orderIds: order._id },
       });
       res.status(201).send(order);
     } catch (error) {
