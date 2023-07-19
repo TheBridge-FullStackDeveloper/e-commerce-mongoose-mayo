@@ -2,7 +2,9 @@ const express = require("express")
 const { dbConnection } = require("./config/config")
 const { handleTypeError } = require("./middleware/errors")
 const app = express()
-const PORT = 3000
+require("dotenv").config();// para poder usar las variables de entorno
+
+const PORT = process.env.PORT || 3001;
 
 dbConnection()
 

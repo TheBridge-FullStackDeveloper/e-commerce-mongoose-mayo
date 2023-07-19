@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
-const { jwt_secret } = require("../config/keys");
+// const { jwt_secret } = require("../config/keys");
+require("dotenv").config()
 
 const UserController = {
   async register(req, res, next) {
@@ -19,7 +20,7 @@ const UserController = {
       const user = await User.findOne({
         email: req.body.email,
       });
-      const token = jwt.sign({ _id: user._id }, jwt_secret); //creamos el token
+      const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET); //creamos el token
       if (user.tokens.length > 4) user.tokens.shift(); //limitamos las sesiones que pueda tener el usuario
       user.tokens.push(token); // guardamos el nuevo token en el array de tokens del usuario
       await user.save(); //guardamos el usuario modificado en base de datos (.save()método de mongoose)
